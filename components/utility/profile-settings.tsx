@@ -1,3 +1,5 @@
+"use client"
+
 import { ChatbotUIContext } from "@/context/context"
 import {
   PROFILE_CONTEXT_MAX,
@@ -42,6 +44,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { WithTooltip } from "../ui/with-tooltip"
 import { ThemeSwitcher } from "./theme-switcher"
+import { Badge } from "../ui/badge"
+import Link from "next/link"
+import { checkSubscription } from "@/lib/subscription"
 
 interface ProfileSettingsProps {}
 
@@ -293,6 +298,10 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
 
   if (!profile) return null
 
+  const Subscription = async () => {
+    router.push("/subscribe")
+  }
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -334,11 +343,16 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
           </SheetHeader>
 
           <Tabs defaultValue="profile">
-            <TabsList className="mt-4 grid w-full grid-cols-2">
+            <TabsList className="mt-4 grid w-full grid-cols-3">
               <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="keys">API Keys</TabsTrigger>
+              <TabsTrigger value="account">Account</TabsTrigger>
             </TabsList>
 
+            <TabsContent value="account" className="mt-4 space-y-4">
+              <div>Display Name: {profile.display_name}</div>
+              <Button onClick={Subscription}>Check Subscription</Button>
+            </TabsContent>
             <TabsContent className="mt-4 space-y-4" value="profile">
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
