@@ -18,7 +18,7 @@ import { checkSubscription } from "@/lib/subscription"
 import Link from "next/link"
 
 const SubscribePage = async () => {
-  const isPro = await checkSubscription()
+  const isPro = (await checkSubscription()) === "pro"
   const onSubscribe = async () => {
     try {
       const response = await axios.get("/api/stripe")

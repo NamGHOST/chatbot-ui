@@ -1,0 +1,5 @@
+- Fix refresh issue across the application
+- Fix the paste image bug
+- Create stripe plans
+- Limit token based on subscription
+- White list for what LLM each plan can be used
