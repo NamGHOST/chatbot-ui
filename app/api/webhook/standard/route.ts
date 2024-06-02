@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       stripe_current_period_end: new Date(
         subscription.current_period_end * 1000
       ).toISOString(),
-      plan_type: "pro"
+      plan_type: 2
     })
 
     if (error) {
@@ -74,7 +74,8 @@ export async function POST(req: Request) {
         stripe_price_id: subscription.items.data[0].price.id,
         stripe_current_period_end: new Date(
           subscription.current_period_end * 1000
-        ).toISOString()
+        ).toISOString(),
+        plan_type: 2
       })
       .eq("stripe_subscription_id", subscription.id)
 

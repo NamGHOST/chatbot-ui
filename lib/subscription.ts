@@ -3,7 +3,7 @@ const DAY_IN_MS = 86_400_000
 import { Database } from "@/supabase/types"
 import { createBrowserClient } from "@supabase/ssr"
 
-export const checkSubscription: () => Promise<string> = async () => {
+export const checkSubscription: () => Promise<number> = async () => {
   const supabase = createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -12,7 +12,7 @@ export const checkSubscription: () => Promise<string> = async () => {
   const user = (await supabase.auth.getUser()).data.user
 
   if (!user) {
-    return "free"
+    return 1
   }
 
   const { data, error: supabaseError } = await supabase
@@ -22,7 +22,7 @@ export const checkSubscription: () => Promise<string> = async () => {
     .single()
 
   if (supabaseError || !data) {
-    return "free"
+    return 1
   }
 
   const isValid =
@@ -30,7 +30,7 @@ export const checkSubscription: () => Promise<string> = async () => {
     new Date(data.stripe_current_period_end).getTime() + DAY_IN_MS > Date.now()
 
   if (!isValid) {
-    return "free"
+    return 1
   }
 
   return data.plan_type

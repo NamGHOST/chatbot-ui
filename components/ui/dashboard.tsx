@@ -18,7 +18,7 @@ export const SIDEBAR_WIDTH = 350
 
 interface DashboardProps {
   children: React.ReactNode
-  planType: string
+  planType: number
 }
 
 export const Dashboard: FC<DashboardProps> = ({ children, planType }) => {

@@ -16,12 +16,29 @@ import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
 import { checkSubscription } from "@/lib/subscription"
 import Link from "next/link"
+import { SubscriptionCard } from "@/components/subscription/card"
 
 const SubscribePage = async () => {
-  const isPro = (await checkSubscription()) === "pro"
-  const onSubscribe = async () => {
+  const planType = await checkSubscription()
+
+  const isFree = planType === 1
+  const isStandard = planType === 2
+  const isPro = planType === 3
+  console.log(planType)
+
+  const onStandardSubscribe = async () => {
     try {
-      const response = await axios.get("/api/stripe")
+      const response = await axios.get("/api/stripe/standard")
+
+      window.location.href = response.data.url
+    } catch (error) {
+      toast.error("Something went wrong")
+    }
+  }
+
+  const onProSubscribe = async () => {
+    try {
+      const response = await axios.get("/api/stripe/pro")
 
       window.location.href = response.data.url
     } catch (error) {
@@ -33,13 +50,13 @@ const SubscribePage = async () => {
       <Link href="/login">
         <Button className="absolute left-2 top-2">Home</Button>
       </Link>
-      <Card className=" absolute mt-20 flex h-[80%] w-[70%] flex-col items-center justify-center">
+      <Card className=" absolute mt-20 flex flex-col items-center justify-center">
         <CardHeader className="flex items-center justify-center text-center">
           <CardTitle>
             Your Current Plan is{" "}
-            {isPro ? (
-              <Badge className=" text-xl">Pro</Badge>
-            ) : (
+            {isStandard && <Badge className=" text-xl">Standard</Badge>}
+            {isPro && <Badge className=" text-xl">Pro</Badge>}
+            {isFree && (
               <>
                 <Badge className=" text-xl">Free</Badge>
                 <br />
@@ -49,428 +66,87 @@ const SubscribePage = async () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {isPro ? (
+          {!isFree ? (
             <div>
-              <Card className=" m-6 w-[500px] p-6">
-                <CardHeader>
-                  <CardTitle>
-                    <div className="flex h-[60px] justify-between">
-                      <div className="text-4xl font-extrabold tracking-wide">
-                        Pro
-                      </div>
-                      <div>
-                        <span className="text-4xl font-extrabold">$10</span>/ mo
-                      </div>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mt-2 grow space-y-1.5 font-light">
-                    <div className="space-y-1 font-semibold">
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Use 100+ AI models with your API keys</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Prompt Library</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Reusable Chat Settings</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>AI Assistants &amp; Tools</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Files &amp; Retrieval</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Workspaces</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Faster Messages</div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="">
-                  <Button
-                    className="mt-12 h-11 w-full bg-blue-500 text-xl font-bold"
-                    onClick={onSubscribe}
-                  >
-                    Check Billing Page
-                  </Button>
-                </CardFooter>
-              </Card>
+              {isStandard && (
+                <SubscriptionCard
+                  buttonText="Check for billing page"
+                  features={[
+                    "旗艦模型: GPT-4、Gemini-Pro-1.5、Claude-3等高級模型",
+                    "文件存儲: 50MB存儲容量",
+                    "輸出限制: 每月最多400,000字",
+                    "與圖像對話",
+                    "與文件對話",
+                    "自定義助手",
+                    "工作區功能",
+                    " 加入我們的社區",
+                    "持續更新教程",
+                    "訪問我們的Prompt Wiki",
+                    "800+ AI工具"
+                  ]}
+                  price={160}
+                  title="STANDARD標準計劃"
+                  onClick={onStandardSubscribe}
+                />
+              )}
+              {isPro && (
+                <SubscriptionCard
+                  buttonText="Check for billing page"
+                  features={[
+                    "包含所有標準功能: 包括標準計劃中的所有內容",
+                    "增加輸出量: 更高的每月字數限制（具體限制待定）",
+                    "獨家第一手AI內容",
+                    "AI+自動化、AI+金融等專門領域內容"
+                  ]}
+                  price={280}
+                  title="PRO專業計劃"
+                  onClick={onProSubscribe}
+                />
+              )}
             </div>
           ) : (
             <div className="grid w-full grid-cols-2">
-              <Card className=" m-6 h-[500px] w-[500px] p-6">
-                <CardHeader>
-                  <CardTitle>
-                    <div className="flex h-[60px] justify-between">
-                      <div className="text-4xl font-extrabold tracking-wide">
-                        Free
-                      </div>
-                      <div>
-                        <span className="text-4xl font-extrabold">$0</span>/ mo
-                      </div>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mt-2 grow space-y-1.5 font-light">
-                    <div className="space-y-1 font-semibold">
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Use 100+ AI models with your API keys</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Standard chat features</div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="">
-                  <Button className=" mt-48 h-11 w-full text-xl font-bold">
-                    Remain on Free
-                  </Button>
-                </CardFooter>
-              </Card>
-              <Card className=" m-6 w-[500px] p-6">
-                <CardHeader>
-                  <CardTitle>
-                    <div className="flex h-[60px] justify-between">
-                      <div className="text-4xl font-extrabold tracking-wide">
-                        Pro
-                      </div>
-                      <div>
-                        <span className="text-4xl font-extrabold">$10</span>/ mo
-                      </div>
-                    </div>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mt-2 grow space-y-1.5 font-light">
-                    <div className="space-y-1 font-semibold">
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Use 100+ AI models with your API keys</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Prompt Library</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Reusable Chat Settings</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>AI Assistants &amp; Tools</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Files &amp; Retrieval</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Workspaces</div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="tabler-icon tabler-icon-circle-check-filled"
-                        >
-                          <path
-                            d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
-                            fill="currentColor"
-                            stroke-width="0"
-                          ></path>
-                        </svg>
-                        <div>Faster Messages</div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="">
-                  <Button
-                    className="mt-12 h-11 w-full bg-blue-500 text-xl font-bold"
-                    onClick={onSubscribe}
-                  >
-                    Upgrade to Plus
-                  </Button>
-                </CardFooter>
-              </Card>
+              <SubscriptionCard
+                buttonText="Remain on Free"
+                features={[
+                  "基礎LLM: Groq和其他開源模型",
+                  "使用限制: 限制使用容量",
+                  "功能限制: 功能和特性有限"
+                ]}
+                price={0}
+                title="FREE免費計劃"
+              />
+              <SubscriptionCard
+                buttonText="Upgrade to Standard"
+                features={[
+                  "旗艦模型: GPT-4、Gemini-Pro-1.5、Claude-3等高級模型",
+                  "文件存儲: 50MB存儲容量",
+                  "輸出限制: 每月最多400,000字",
+                  "與圖像對話",
+                  "與文件對話",
+                  "自定義助手",
+                  "工作區功能",
+                  " 加入我們的社區",
+                  "持續更新教程",
+                  "訪問我們的Prompt Wiki",
+                  "800+ AI工具"
+                ]}
+                price={160}
+                title="STANDARD標準計劃"
+                onClick={onStandardSubscribe}
+              />
+              <SubscriptionCard
+                buttonText="Upgrade to Pro"
+                features={[
+                  "包含所有標準功能: 包括標準計劃中的所有內容",
+                  "增加輸出量: 更高的每月字數限制（具體限制待定）",
+                  "獨家第一手AI內容",
+                  "AI+自動化、AI+金融等專門領域內容"
+                ]}
+                price={280}
+                title="PRO專業計劃"
+                onClick={onProSubscribe}
+              />
             </div>
           )}
         </CardContent>

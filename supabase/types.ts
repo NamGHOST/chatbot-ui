@@ -1401,7 +1401,7 @@ export type Database = {
           stripe_price_id: string
           stripe_subscription_id: string
           user_id: string
-          plan_type: string
+          plan_type: number
         }
         Insert: {
           id?: string
@@ -1410,7 +1410,7 @@ export type Database = {
           stripe_price_id: string
           stripe_subscription_id: string
           user_id: string
-          plan_type: string
+          plan_type: number
         }
         Update: {
           id?: string
@@ -1419,7 +1419,7 @@ export type Database = {
           stripe_price_id?: string
           stripe_subscription_id?: string
           user_id?: string
-          plan_type?: string
+          plan_type?: number
         }
         Relationships: []
       }

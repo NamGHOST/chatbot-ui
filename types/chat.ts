@@ -9,7 +9,7 @@ export interface ChatSettings {
   includeProfileContext: boolean
   includeWorkspaceInstructions: boolean
   embeddingsProvider: "openai" | "local"
-  planType?: string
+  planType?: number
 }
 
 export interface ChatPayload {
