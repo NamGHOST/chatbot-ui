@@ -28,14 +28,14 @@ export const SIDEBAR_ICON_SIZE = 28
 
 interface SidebarSwitcherProps {
   onContentTypeChange: (contentType: ContentType) => void
-  planType: string
+  planType: number
 }
 
 const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
   onContentTypeChange,
   planType
 }) => {
-  const isPro = planType === "pro"
+  const isPro = planType === 2
 
   return (
     <div className="flex flex-col justify-between border-r-2 pb-5">
