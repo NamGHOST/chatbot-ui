@@ -45,6 +45,18 @@ export async function POST(req: Request) {
     if (!session?.metadata?.userId) {
       return new NextResponse("User id is required", { status: 400 })
     }
+    const { data } = await supabase
+      .from("user_subscription")
+      .select("*")
+      .eq("user_id", session.metadata.userId)
+      .single()
+
+    if (data) {
+      await supabase
+        .from("user_subscription")
+        .delete()
+        .eq("user_id", session.metadata.userId)
+    }
 
     const { error } = await supabase.from("user_subscription").insert({
       user_id: session.metadata.userId,
