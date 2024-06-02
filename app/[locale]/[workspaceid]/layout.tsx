@@ -19,6 +19,7 @@ import { LLMID } from "@/types"
 import { useParams, useRouter } from "next/navigation"
 import { ReactNode, useContext, useEffect, useState } from "react"
 import Loading from "../loading"
+import { checkSubscription } from "@/lib/subscription"
 
 interface WorkspaceLayoutProps {
   children: ReactNode
@@ -29,8 +30,10 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
 
   const params = useParams()
   const workspaceId = params.workspaceid as string
+  console.log("called")
 
   const {
+    chatSettings,
     setChatSettings,
     setAssistants,
     setAssistantImages,
@@ -155,6 +158,8 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     const modelData = await getModelWorkspacesByWorkspaceId(workspaceId)
     setModels(modelData.models)
 
+    const planType = await checkSubscription()
+
     setChatSettings({
       model: (workspace?.default_model || "gpt-4-1106-preview") as LLMID,
       prompt:
@@ -166,7 +171,8 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
       includeWorkspaceInstructions:
         workspace?.include_workspace_instructions || true,
       embeddingsProvider:
-        (workspace?.embeddings_provider as "openai" | "local") || "openai"
+        (workspace?.embeddings_provider as "openai" | "local") || "openai",
+      planType: planType
     })
 
     setLoading(false)
@@ -176,5 +182,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     return <Loading />
   }
 
-  return <Dashboard>{children}</Dashboard>
+  return (
+    <Dashboard planType={chatSettings?.planType || 1}>{children}</Dashboard>
+  )
 }

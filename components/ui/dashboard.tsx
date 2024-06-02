@@ -9,17 +9,19 @@ import { cn } from "@/lib/utils"
 import { ContentType } from "@/types"
 import { IconChevronCompactRight } from "@tabler/icons-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { FC, useState } from "react"
+import { FC, Suspense, useState } from "react"
 import { useSelectFileHandler } from "../chat/chat-hooks/use-select-file-handler"
 import { CommandK } from "../utility/command-k"
+import Loading from "@/app/[locale]/loading"
 
 export const SIDEBAR_WIDTH = 350
 
 interface DashboardProps {
   children: React.ReactNode
+  planType: number
 }
 
-export const Dashboard: FC<DashboardProps> = ({ children }) => {
+export const Dashboard: FC<DashboardProps> = ({ children, planType }) => {
   useHotkey("s", () => setShowSidebar(prevState => !prevState))
 
   const pathname = usePathname()
@@ -66,6 +68,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
     setShowSidebar(prevState => !prevState)
     localStorage.setItem("showSidebar", String(!showSidebar))
   }
+  console.log("called Dashboard")
 
   return (
     <div className="flex size-full">
@@ -91,8 +94,12 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
               router.replace(`${pathname}?tab=${tabValue}`)
             }}
           >
-            <SidebarSwitcher onContentTypeChange={setContentType} />
-
+            <Suspense>
+              <SidebarSwitcher
+                onContentTypeChange={setContentType}
+                planType={planType}
+              />
+            </Suspense>
             <Sidebar contentType={contentType} showSidebar={showSidebar} />
           </Tabs>
         )}

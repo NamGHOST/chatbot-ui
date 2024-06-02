@@ -142,9 +142,11 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
   }
 
   const handlePaste = (event: React.ClipboardEvent) => {
-    const imagesAllowed = LLM_LIST.find(
-      llm => llm.modelId === chatSettings?.model
-    )?.imageInput
+    console.log(" chatSettings?.model", chatSettings?.model)
+
+    const imagesAllowed = ["openai/gpt-4-vision-preview"].includes(
+      chatSettings!.model
+    )
 
     const items = event.clipboardData.items
     for (const item of items) {

@@ -9,7 +9,7 @@ import {
   IconRobotFace,
   IconSparkles
 } from "@tabler/icons-react"
-import { FC } from "react"
+import { FC, memo, useContext, useMemo } from "react"
 import { TabsList } from "../ui/tabs"
 import { WithTooltip } from "../ui/with-tooltip"
 import { ProfileSettings } from "../utility/profile-settings"
@@ -22,17 +22,21 @@ import {
   HoverCardTrigger
 } from "@/components/ui/hover-card"
 import Link from "next/link"
+import { ChatbotUIContext } from "@/context/context"
 
 export const SIDEBAR_ICON_SIZE = 28
 
 interface SidebarSwitcherProps {
   onContentTypeChange: (contentType: ContentType) => void
+  planType: string
 }
 
-export const SidebarSwitcher: FC<SidebarSwitcherProps> = async ({
-  onContentTypeChange
+const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
+  onContentTypeChange,
+  planType
 }) => {
-  const isPro = await checkSubscription()
+  const isPro = planType === "pro"
+
   return (
     <div className="flex flex-col justify-between border-r-2 pb-5">
       <TabsList className="bg-background grid h-[440px] grid-rows-7">
@@ -239,3 +243,8 @@ export const SidebarSwitcher: FC<SidebarSwitcherProps> = async ({
     </div>
   )
 }
+
+export const SidebarSwitcher = memo(
+  SidebarSwitcherComponent,
+  (a, b) => a.planType === b.planType
+)

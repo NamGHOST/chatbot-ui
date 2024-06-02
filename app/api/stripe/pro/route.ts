@@ -38,7 +38,11 @@ export async function GET() {
       if (error) {
         console.log(error)
       }
-      if (userSubscription && userSubscription.stripe_customer_id) {
+      if (
+        userSubscription &&
+        userSubscription.stripe_customer_id &&
+        userSubscription.plan_type === 3
+      ) {
         const stripeSession = await stripe.billingPortal.sessions.create({
           customer: userSubscription.stripe_customer_id,
           return_url: returnUrl
@@ -57,12 +61,12 @@ export async function GET() {
         line_items: [
           {
             price_data: {
-              currency: "USD",
+              currency: "HKD",
               product_data: {
-                name: "Chatbot-UI Pro",
+                name: "Chatbot-UI Pro Plan",
                 description: "Access the pro features of ChatbotUI"
               },
-              unit_amount: 1000,
+              unit_amount: 28000,
               recurring: {
                 interval: "month"
               }
