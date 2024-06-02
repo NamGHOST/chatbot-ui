@@ -35,7 +35,7 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
   onContentTypeChange,
   planType
 }) => {
-  const isPro = planType === 2
+  const isPro = planType === 3
 
   return (
     <div className="flex flex-col justify-between border-r-2 pb-5">
