@@ -21,6 +21,8 @@ import {
   SETUP_STEP_COUNT,
   StepContainer
 } from "../../../components/setup/step-container"
+import { getSubscriptionByUserId } from "@/db/subscription"
+import { checkSubscription } from "@/lib/subscription"
 
 export default function SetupPage() {
   const {
@@ -71,6 +73,8 @@ export default function SetupPage() {
         const user = session.user
 
         const profile = await getProfileByUserId(user.id)
+        const planType = await checkSubscription()
+
         setProfile(profile)
         setUsername(profile.username)
 
@@ -84,7 +88,11 @@ export default function SetupPage() {
           setEnvKeyMap(data.envKeyMap)
           setAvailableHostedModels(data.hostedModels)
 
-          if (profile["openrouter_api_key"] || data.envKeyMap["openrouter"]) {
+          if (
+            profile["openrouter_api_key"] ||
+            data.envKeyMap["openrouter"] ||
+            planType > 1
+          ) {
             const openRouterModels = await fetchOpenRouterModels()
             if (!openRouterModels) return
             setAvailableOpenRouterModels(openRouterModels)

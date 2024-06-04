@@ -161,17 +161,17 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     const planType = await checkSubscription()
 
     setChatSettings({
-      model: (workspace?.default_model || "gpt-4-1106-preview") as LLMID,
+      model: (workspace?.default_model || "llama3-70b-8192") as LLMID,
       prompt:
         workspace?.default_prompt ||
         "You are a friendly, helpful AI assistant.",
-      temperature: workspace?.default_temperature || 0.5,
+      temperature: workspace?.default_temperature || 0.1,
       contextLength: workspace?.default_context_length || 4096,
       includeProfileContext: workspace?.include_profile_context || true,
       includeWorkspaceInstructions:
         workspace?.include_workspace_instructions || true,
       embeddingsProvider:
-        (workspace?.embeddings_provider as "openai" | "local") || "openai",
+        (workspace?.embeddings_provider as "openai" | "local") || "local",
       planType: planType
     })
 

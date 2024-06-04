@@ -20,7 +20,8 @@ export async function POST(request: Request) {
     checkApiKey(profile.openrouter_api_key, "OpenRouter")
 
     const openai = new OpenAI({
-      apiKey: profile.openrouter_api_key || "",
+      apiKey:
+        profile.openrouter_api_key || process.env.OPENROUTER_API_KEY_ADMIN,
       baseURL: "https://openrouter.ai/api/v1"
     })
 

@@ -12,6 +12,7 @@ import {
   fetchOllamaModels,
   fetchOpenRouterModels
 } from "@/lib/models/fetch-models"
+import { checkSubscription } from "@/lib/subscription"
 import { supabase } from "@/lib/supabase/browser-client"
 import { Tables } from "@/supabase/types"
 import {
@@ -77,13 +78,13 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   const [userInput, setUserInput] = useState<string>("")
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatSettings, setChatSettings] = useState<ChatSettings>({
-    model: "gpt-4-turbo-preview",
+    model: "llama3-70b-8192",
     prompt: "You are a helpful AI assistant.",
-    temperature: 0.5,
+    temperature: 0.1,
     contextLength: 4000,
     includeProfileContext: true,
     includeWorkspaceInstructions: true,
-    embeddingsProvider: "openai"
+    embeddingsProvider: "local"
   })
   const [selectedChat, setSelectedChat] = useState<Tables<"chats"> | null>(null)
   const [chatFileItems, setChatFileItems] = useState<Tables<"file_items">[]>([])
@@ -133,10 +134,12 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
 
         setEnvKeyMap(hostedModelRes.envKeyMap)
         setAvailableHostedModels(hostedModelRes.hostedModels)
+        const planType = await checkSubscription()
 
         if (
           profile["openrouter_api_key"] ||
-          hostedModelRes.envKeyMap["openrouter"]
+          hostedModelRes.envKeyMap["openrouter"] ||
+          planType > 2
         ) {
           const openRouterModels = await fetchOpenRouterModels()
           if (!openRouterModels) return

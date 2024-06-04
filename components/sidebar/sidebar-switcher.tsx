@@ -35,7 +35,7 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
   onContentTypeChange,
   planType
 }) => {
-  const isPro = planType === 3
+  const unlockMenu = planType > 1
 
   return (
     <div className="flex flex-col justify-between border-r-2 pb-5">
@@ -46,14 +46,14 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
           onContentTypeChange={onContentTypeChange}
         />
 
-        {isPro && (
+        {unlockMenu && (
           <SidebarSwitchItem
             icon={<IconAdjustmentsHorizontal size={SIDEBAR_ICON_SIZE} />}
             contentType="presets"
             onContentTypeChange={onContentTypeChange}
           />
         )}
-        {!isPro && (
+        {!unlockMenu && (
           <Link href={"/subscribe"}>
             <HoverCard>
               <HoverCardTrigger>
@@ -72,14 +72,14 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
           </Link>
         )}
 
-        {isPro && (
+        {unlockMenu && (
           <SidebarSwitchItem
             icon={<IconPencil size={SIDEBAR_ICON_SIZE} />}
             contentType="prompts"
             onContentTypeChange={onContentTypeChange}
           />
         )}
-        {!isPro && (
+        {!unlockMenu && (
           <div>
             <Link href={"/subscribe"}>
               <HoverCard>
@@ -98,14 +98,14 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
           </div>
         )}
 
-        {isPro && (
+        {unlockMenu && (
           <SidebarSwitchItem
             icon={<IconSparkles size={SIDEBAR_ICON_SIZE} />}
             contentType="models"
             onContentTypeChange={onContentTypeChange}
           />
         )}
-        {!isPro && (
+        {!unlockMenu && (
           <div>
             <Link href={"/subscribe"}>
               <HoverCard>
@@ -124,14 +124,14 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
           </div>
         )}
 
-        {isPro && (
+        {unlockMenu && (
           <SidebarSwitchItem
             icon={<IconFile size={SIDEBAR_ICON_SIZE} />}
             contentType="files"
             onContentTypeChange={onContentTypeChange}
           />
         )}
-        {!isPro && (
+        {!unlockMenu && (
           <div>
             <Link href={"/subscribe"}>
               <HoverCard>
@@ -150,14 +150,14 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
           </div>
         )}
 
-        {isPro && (
+        {unlockMenu && (
           <SidebarSwitchItem
             icon={<IconBooks size={SIDEBAR_ICON_SIZE} />}
             contentType="collections"
             onContentTypeChange={onContentTypeChange}
           />
         )}
-        {!isPro && (
+        {!unlockMenu && (
           <div>
             <Link href={"/subscribe"}>
               <HoverCard>
@@ -176,14 +176,14 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
           </div>
         )}
 
-        {isPro && (
+        {unlockMenu && (
           <SidebarSwitchItem
             icon={<IconRobotFace size={SIDEBAR_ICON_SIZE} />}
             contentType="assistants"
             onContentTypeChange={onContentTypeChange}
           />
         )}
-        {!isPro && (
+        {!unlockMenu && (
           <div>
             <Link href={"/subscribe"}>
               <HoverCard>
@@ -202,14 +202,14 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
           </div>
         )}
 
-        {isPro && (
+        {unlockMenu && (
           <SidebarSwitchItem
             icon={<IconBolt size={SIDEBAR_ICON_SIZE} />}
             contentType="tools"
             onContentTypeChange={onContentTypeChange}
           />
         )}
-        {!isPro && (
+        {!unlockMenu && (
           <div>
             <Link href={"/subscribe"}>
               <HoverCard>
