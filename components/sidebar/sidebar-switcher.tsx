@@ -36,6 +36,7 @@ const SidebarSwitcherComponent: FC<SidebarSwitcherProps> = async ({
   planType
 }) => {
   const unlockMenu = planType > 1
+  console.log("T", planType, unlockMenu)
 
   return (
     <div className="flex flex-col justify-between border-r-2 pb-5">

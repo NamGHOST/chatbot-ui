@@ -182,6 +182,8 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     return <Loading />
   }
 
+  console.log("dashboard chatSettings", chatSettings)
+
   return (
     <Dashboard planType={chatSettings?.planType || 1}>{children}</Dashboard>
   )
