@@ -6,6 +6,7 @@ import {
   LLM,
   MessageImage,
   OpenRouterLLM,
+  Plan,
   WorkspaceImage
 } from "@/types"
 import { AssistantImage } from "@/types/images/assistant-image"
@@ -74,6 +75,8 @@ interface ChatbotUIContext {
   setChatMessages: Dispatch<SetStateAction<ChatMessage[]>>
   chatSettings: ChatSettings | null
   setChatSettings: Dispatch<SetStateAction<ChatSettings>>
+  plan: Plan | null
+  setPlan: Dispatch<SetStateAction<Plan>>
   selectedChat: Tables<"chats"> | null
   setSelectedChat: Dispatch<SetStateAction<Tables<"chats"> | null>>
   chatFileItems: Tables<"file_items">[]
@@ -201,6 +204,8 @@ export const ChatbotUIContext = createContext<ChatbotUIContext>({
   chatMessages: [],
   setChatMessages: () => {},
   chatSettings: null,
+  setPlan: () => {},
+  plan: null,
   setChatSettings: () => {},
   chatFileItems: [],
   setChatFileItems: () => {},

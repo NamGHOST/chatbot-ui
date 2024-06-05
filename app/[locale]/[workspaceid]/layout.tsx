@@ -35,6 +35,8 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
   const {
     chatSettings,
     setChatSettings,
+    plan,
+    setPlan,
     setAssistants,
     setAssistantImages,
     setChats,
@@ -159,6 +161,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     setModels(modelData.models)
 
     const planType = await checkSubscription()
+    setPlan({ planType: planType })
 
     setChatSettings({
       model: (workspace?.default_model || "llama3-70b-8192") as LLMID,
@@ -171,8 +174,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
       includeWorkspaceInstructions:
         workspace?.include_workspace_instructions || true,
       embeddingsProvider:
-        (workspace?.embeddings_provider as "openai" | "local") || "local",
-      planType: planType
+        (workspace?.embeddings_provider as "openai" | "local") || "local"
     })
 
     setLoading(false)
@@ -182,9 +184,5 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     return <Loading />
   }
 
-  console.log("dashboard chatSettings", chatSettings)
-
-  return (
-    <Dashboard planType={chatSettings?.planType || 1}>{children}</Dashboard>
-  )
+  return <Dashboard planType={plan?.planType || 1}>{children}</Dashboard>
 }

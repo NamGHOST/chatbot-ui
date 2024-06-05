@@ -22,6 +22,7 @@ import {
   LLM,
   MessageImage,
   OpenRouterLLM,
+  Plan,
   WorkspaceImage
 } from "@/types"
 import { AssistantImage } from "@/types/images/assistant-image"
@@ -85,6 +86,9 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
     includeProfileContext: true,
     includeWorkspaceInstructions: true,
     embeddingsProvider: "local"
+  })
+  const [plan, setPlan] = useState<Plan>({
+    planType: 1
   })
   const [selectedChat, setSelectedChat] = useState<Tables<"chats"> | null>(null)
   const [chatFileItems, setChatFileItems] = useState<Tables<"file_items">[]>([])
@@ -264,6 +268,8 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
         setChatMessages,
         chatSettings,
         setChatSettings,
+        plan,
+        setPlan,
         selectedChat,
         setSelectedChat,
         chatFileItems,
